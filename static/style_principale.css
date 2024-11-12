@@ -1,0 +1,62 @@
+* {
+    margin: 0;
+}
+body {
+    font-family: sans-serif;
+}
+
+/* NAVBAR */
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px;
+}
+
+.gauche {
+    display: flex;
+    margin: 15px;
+}
+
+.title h1 {
+    max-width: 100%;
+    height: auto;
+}
+
+.champs-recherche input {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.Nom {
+    color: #fff;
+    font-size: 18px;
+    margin-left: 15px;
+}
+
+
+/* Section lien et jour */
+
+.lien-jour {
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lien-jour div {
+    font-size: larger;
+    padding: 50px;
+}
+
+.lien-ajout {
+    text-align: left;
+}
+
+.jour {
+    flex-direction:t;
+}
