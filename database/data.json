@@ -1,0 +1,7 @@
+[
+
+{ "name" : "Joe","date":"24/12/2024","adresse": "wavre","description": "accident devant basic-fit"},
+{ "name" : "Joe","date":"24/12/2024","adresse": "lln", "description": "accident esplanade"},
+{ "name" : "Fred","date":"24/12/2024","adresse": "Limal","description": "accident avec un vélo"}
+
+]

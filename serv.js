@@ -1,7 +1,16 @@
+const { MongoClient, ObjectId } = require("mongodb");
+const uri = "mongodb://localhost:27017/";
+const client = new MongoClient(uri);
+
+const database = client.db('database');
+const identifiant= database.collection('identifiant');
+const data = database.collection('data');
+
 var express = require('express');
 var session = require('express-session');
+engines = require('consolidate');
 var app = express ();
-
+app.engine('html', engines.hogan);
 app.set('view engine', 'ejs');
 app.set('views', 'static');
 
@@ -11,11 +20,14 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.get('/', function(req,res,next) {
-    res.render('page_principale.ejs', {username: "" ,description: "" });
-    });
+app.get('/', async function(req,res,next) {
+    const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    console.log(info);
+    res.render('page_principale.ejs', {username: "" ,description: "",name1: info});
 
-app.get('/identification.html', function(req,res,next) {
+});
+
+app.get('/identification.html', async function(req,res,next) {
   if ( req.query.username == "moimeme" && req.query.password == "secret" ) {
     req.session.username = "moimeme";
     res.render('page_principale.ejs', {username: req.session.username ,description: "" });
