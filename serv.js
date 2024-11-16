@@ -94,6 +94,11 @@ app.post("/edit", async function(req,res,next) {
     const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
     res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso});
     });
-
+app.post("/delete",async function(req,res,next) {
+    await data.deleteOne({_id:new ObjectId(req.body.id) })
+    const info = await data.find({}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
+    const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso});
+    });
 app.use(express.static('static'));
 app.listen(8080);

@@ -83,6 +83,7 @@
                     <td>Adresse</td>
                     <td>Description</td>
                     <td></td>
+                    <td></td>
                 </tr>
             </thead>
             <tbody>
@@ -101,6 +102,10 @@
                             <td>
                                 <input type="submit" value="Modifier">
                             </td>
+                        </form>
+                        <form action="/delete" method="post">
+                            <input type="hidden" name="id" value="<%= item._id %>">
+                            <td> <input type="submit" value="Suppri mer"></td>
                         </form>
                     </tr>
                 <% }) %>
