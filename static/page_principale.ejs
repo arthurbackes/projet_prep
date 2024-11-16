@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site de Ottignies</title>
+    <link rel="stylesheet" href="style_principale.css">
+</head>
+<body>
+    <nav>
+        <div class="Titre">
+            <h1>Projet prepratoire</h1>
+        </div>
+        
+
+        <div class="gauche">
+            <div class="champs-recherche">
+                <input type="text" placeholder="Champs de recherche">
+            </div>
+
+            <div class="Nom">
+                <span>
+                    <% if (username) { %>
+                        <%= username %>
+                    <% } else { %>
+                        <a href='page_identification.ejs' id="lien-ajout">Se connecter / S'inscrire</a>
+                    <% } %>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="lien-jour">
+        <div class="lien-ajout">
+            <% if (username) { %>
+                <a href="/page_creation.html" id="lien-ajout">Lien pour ajouter</a>
+            <% } %>
+        </div>
+        <div class="lien-déconnection">
+            <% if (username) { %>
+                <a href="/deconnection.html" id="deconnection">Se déconnecter</a>
+            <% } %>
+        </div>
+
+        <div class="jour">
+            <h4>Date : 29/09/2024</h4>
+        </div>
+    </section>
+    <section class="table">
+
+        <table>
+            <tbody>
+                <tr>
+                    <td>Nom</td>
+                    <td>Date</td>
+                    <td>Adresse</td>
+                    <td>Description</td>
+
+
+
+                </tr>
+                <% name1.forEach(function(item) { %>
+                    <tr>
+                        <td><%= item.name %></td>
+                        <td><%= item.date %></td>
+                        <td><%= item.adresse %></td>
+                        <td><%= item.description %></td>
+
+
+                    </tr>
+                <% }); %>
+
+            </tbody>
+        </table>
+
+        <% if (username) { %>
+        <% if (info_perso && info_perso.length > 0) { %>
+        <p>Vos incidents:</p>
+        <table>
+            <thead>
+                <tr>
+                    <td>Date</td>
+                    <td>Adresse</td>
+                    <td>Description</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                <% info_perso.forEach(function(item) { %>
+                    <tr>
+                        <form action="/modification.ejs" method="post">
+                            <input type="hidden" name="id" value="<%= item._id %>">
+                            <input type="hidden"  name="date" value="<%= item.date %>">
+                            <input type="hidden"  name="adresse" value="<%= item.adresse %>">
+                            <input type="hidden"  name="description" value="<%= item.description %>">
+
+
+                            <td><%= item.date %></td>
+                            <td><%= item.adresse %></td>
+                            <td><%= item.description %></td>
+                            <td>
+                                <input type="submit" value="Modifier">
+                            </td>
+                        </form>
+                        <form action="/delete" method="post">
+                            <input type="hidden" name="id" value="<%= item._id %>">
+                            <td> <input type="submit" value="Suppri mer"></td>
+                        </form>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <% } else { %>
+            <p>Vous n'avez signalé aucun incident</p>
+        <% } %>
+        <% } %>
+    </section>
+    
+</body>
+</html>

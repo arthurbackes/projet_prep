@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site de Ottignies</title>
+    <link rel="stylesheet" href="style_principale.css">
+</head>
+<body>
+    <nav>
+        <div class="Titre">
+            <h1>Projet prepratoire</h1>
+        </div>
+        <div class="lien-Accueil">
+            <a href='/retour' id="lien-Accueil">Accueil</a>
+        </div>
+
+        <div class="gauche">
+            <div class="champs-recherche">
+                <input type="text" placeholder="Champs de recherche">
+            </div>
+
+            <div class="Nom">
+                <span><%= username%></span>
+            </div>
+        </div>
+    </nav>
+    <p>
+    Modifiez un incident :
+        <form action="/edit" method="post">
+            <p>
+                <label>Date :</label>
+                <input type="date" name="date" value="<%= date.split('/').reverse().join('-') %>">
+            </p>
+            <p>Adresse:<br>
+            <input type="text" name="adresse" value="<%= adresse %>" ><br>
+            </p>
+            <p>Description:<br>
+            <input type="text" name="description" value="<%= description %>"><br>
+            </p>
+            <input type="hidden" name="id" value="<%= id %>">
+            <input type="submit" value="Modifier l'incident">
+        </form>
+    </p>
+</body>
