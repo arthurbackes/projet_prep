@@ -25,27 +25,20 @@
             </div>
         </div>
     </nav>
-
     <p>
-    Ajoutez un incident :
-        <form action="ajout.html" method="post">
+    Modifiez un incident :
+        <form action="/edit" method="post">
             <p>
                 <label>Date :</label>
-                <input type="date" name="date">
+                <input type="date" name="date" value="<%= date.split('/').reverse().join('-') %>">
             </p>
             <p>Adresse:<br>
-            <input type="text" name="adresse"><br>
+            <input type="text" name="adresse" value="<%= adresse %>" ><br>
             </p>
             <p>Description:<br>
-            <input type="text" name="description"><br>
+            <input type="text" name="description" value="<%= description %>"><br>
             </p>
-            <input type="submit" value="Submit incident">
-          </form>
+            <input type="hidden" name="id" value="<%= id %>">
+            <input type="submit" value="Modifier l'incident">
+        </form>
     </p>
-
-
-
-
-
-
-</body>

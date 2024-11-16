@@ -13,7 +13,7 @@ var app = express ();
 app.engine('html', engines.hogan);
 app.set('view engine', 'ejs');
 app.set('views', 'static');
-
+app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: "propre123",
   resave: true,
@@ -22,40 +22,78 @@ app.use(session({
 
 app.get('/', async function(req,res,next) {
     const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
-    console.log(info);
-    res.render('page_principale.ejs', {username: "" ,description: "",name1: info});
+
+    res.render('page_principale.ejs', {username: "" ,name1: info,info_perso:""});
 
 });
+app.get('/page_identification.ejs',function(req,res,next) {
+    res.render('page_identification.ejs', {erreur: "" });
 
+});
 app.get('/identification.html', async function(req,res,next) {
-  if ( req.query.username == "moimeme" && req.query.password == "secret" ) {
-    req.session.username = "moimeme";
-    res.render('page_principale.ejs', {username: req.session.username ,description: "" });
+    const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    const verification = await identifiant.findOne({ name:req.query.username});
+    if ( verification && req.query.password == verification.password ) {
+    const info_perso = await data.find({name: verification.name}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    req.session.username = verification.name;
+    res.render('page_principale.ejs', {username: req.session.username ,name1: info,info_perso:info_perso });
   }
   else
-    res.redirect('page_identification.html');
+    res.render('page_identification.ejs', {erreur: "Identifiant ou mot de passe incorrect" });
 });
 
-app.get('/inscription.html', function(req,res,next) {
-    req.session.username = req.query.username;
-    res.render('page_principale.ejs', {username: req.session.username ,description: "" });
+app.post('/inscription.html', async function(req,res,next) {
+    const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    const verif_compte = await identifiant.findOne({ name: req.body.username });
+    if (verif_compte){
+        res.render('page_identification.ejs', {erreur: "Identifiant déjà utilisé" });
+    }else {
+        await identifiant.insertOne({ "name" : req.body.username,"password": req.body.password});
+        const info_perso = await data.find({name: req.body.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+        req.session.username = req.body.username;
+        res.render('page_principale.ejs', {username: req.session.username ,name1: info,info_perso:info_perso });
+    }
+
     });
 
 app.get('/page_creation.html', function(req,res,next) {
   res.render('page_creation.ejs', {username: req.session.username } );
 });
-app.get('/ajout.html', function(req,res,next) {
-  if ( req.session.username )
-    // this session belongs to an authorized user, we should add the incident to the database
-    res.render('page_principale.ejs',{username: req.session.username, description: req.query.description });
-  else
-    // the session belongs to a user that was not authorized; refuse request.
-    res.redirect('page_identification.html');
+app.post('/ajout.html', async function(req,res,next) {
+    await data.insertOne({ "name" : req.session.username,"date": req.body.date,"adresse": req.body.adresse,"description": req.body.description});
+    const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    res.render('page_principale.ejs',{username: req.session.username,name1: info,info_perso:info_perso});
 });
 app.get('/deconnection.html', function(req, res, next) {
     req.session.destroy();
     res.redirect('/');
 });
+app.get('/retour', async function(req,res,next) {
+    const info = await data.find({}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
+    if (req.session.username) {
+        const info_perso = await data.find({name: req.session.username}, {
+            name: 1,
+            date: 1,
+            adresse: 1,
+            description: 1,
+            _id: 0
+        }).toArray();
+        res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso});
+    } else {
+        res.render('page_principale.ejs', {username: "", name1: info});
+    }
+});
+
+app.post("/modification.ejs",async function(req,res,next) {
+    res.render('modification.ejs', {username: req.session.username,date: req.body.date,adresse: req.body.adresse,description: req.body.description, id:req.body.id});
+    });
+app.post("/edit", async function(req,res,next) {
+    await data.updateOne({_id:new ObjectId(req.body.id) }, {$set: {username: req.session.username,date: req.body.date,adresse: req.body.adresse,description: req.body.description}});
+    const info = await data.find({}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
+    const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso});
+    });
 
 app.use(express.static('static'));
 app.listen(8080);
