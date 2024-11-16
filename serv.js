@@ -57,13 +57,17 @@ app.post('/inscription.html', async function(req,res,next) {
     });
 
 app.get('/page_creation.html', function(req,res,next) {
-  res.render('page_creation.ejs', {username: req.session.username } );
+  res.render('page_creation.ejs', {username: req.session.username,erreur:"" } );
 });
 app.post('/ajout.html', async function(req,res,next) {
+    if (req.body.date && req.body.adresse && req.body.description){
     await data.insertOne({ "name" : req.session.username,"date": req.body.date,"adresse": req.body.adresse,"description": req.body.description});
     const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
     const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
     res.render('page_principale.ejs',{username: req.session.username,name1: info,info_perso:info_perso});
+    } else {
+        res.render('page_creation.ejs', {username: req.session.username, erreur: "Veuillez remplir tous les champs" } );
+    }
 });
 app.get('/deconnection.html', function(req, res, next) {
     req.session.destroy();
