@@ -15,7 +15,10 @@
 
         <div class="gauche">
             <div class="champs-recherche">
-                <input type="text" placeholder="Champs de recherche">
+                <form action="/recherche" method="get">
+                <input type="text" name="recherche" placeholder="Champs de recherche">
+                </form>
+
             </div>
 
             <div class="Nom">
@@ -59,16 +62,14 @@
 
 
                 </tr>
-                <% name1.forEach(function(item) { %>
-                    <tr>
-                        <td><%= item.name %></td>
-                        <td><%= item.date %></td>
-                        <td><%= item.adresse %></td>
-                        <td><%= item.description %></td>
-
-
-                    </tr>
-                <% }); %>
+                <% for (let item of name1) { %>
+                <tr>
+                    <td><%= item.name %></td>
+                    <td><%= item.date %></td>
+                    <td><%= item.adresse %></td>
+                    <td><%= item.description %></td>
+                </tr>
+                <% } %>
 
             </tbody>
         </table>
@@ -87,7 +88,7 @@
                 </tr>
             </thead>
             <tbody>
-                <% info_perso.forEach(function(item) { %>
+                <% for (let item of info_perso) { %>
                     <tr>
                         <form action="/modification.ejs" method="post">
                             <input type="hidden" name="id" value="<%= item._id %>">
@@ -105,17 +106,47 @@
                         </form>
                         <form action="/delete" method="post">
                             <input type="hidden" name="id" value="<%= item._id %>">
-                            <td> <input type="submit" value="Suppri mer"></td>
+                            <td> <input type="submit" value="Supprimer"></td>
                         </form>
                     </tr>
-                <% }) %>
+                <% } %>
             </tbody>
         </table>
         <% } else { %>
             <p>Vous n'avez signalé aucun incident</p>
-        <% } %>
-        <% } %>
+        <% } }%>
+        <% if (action) { %>
+        <% if (recherche && recherche.length>0) { %>
+        <p>Votre recherche:</p>
+        <table>
+            <thead>
+                <tr>
+                    <td>Nom</td>
+                    <td>Date</td>
+                    <td>Adresse</td>
+                    <td>Description</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let item of recherche) { %>
+                    <tr>
+                            <td><%= item.name %></td>
+                            <td><%= item.date %></td>
+                            <td><%= item.adresse %></td>
+                            <td><%= item.description %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <%}else {%>
+        <p>Aucune donnée trouvée.</p>
+        <%}
+        %>
+        <%}%>
     </section>
-    
+
+
+
+
 </body>
 </html>

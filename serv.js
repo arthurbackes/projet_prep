@@ -23,7 +23,7 @@ app.use(session({
 app.get('/', async function(req,res,next) {
     const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
 
-    res.render('page_principale.ejs', {username: "" ,name1: info,info_perso:""});
+    res.render('page_principale.ejs', {username: "" ,name1: info,info_perso:"",recherche:"",action: false});
 
 });
 app.get('/page_identification.ejs',function(req,res,next) {
@@ -36,7 +36,7 @@ app.get('/identification.html', async function(req,res,next) {
     if ( verification && req.query.password == verification.password ) {
     const info_perso = await data.find({name: verification.name}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
     req.session.username = verification.name;
-    res.render('page_principale.ejs', {username: req.session.username ,name1: info,info_perso:info_perso });
+    res.render('page_principale.ejs', {username: req.session.username ,name1: info,info_perso:info_perso,recherche:"",action: false });
   }
   else
     res.render('page_identification.ejs', {erreur: "Identifiant ou mot de passe incorrect" });
@@ -51,7 +51,7 @@ app.post('/inscription.html', async function(req,res,next) {
         await identifiant.insertOne({ "name" : req.body.username,"password": req.body.password});
         const info_perso = await data.find({name: req.body.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
         req.session.username = req.body.username;
-        res.render('page_principale.ejs', {username: req.session.username ,name1: info,info_perso:info_perso });
+        res.render('page_principale.ejs', {username: req.session.username ,name1: info,info_perso:info_perso,recherche:"",action: false });
     }
 
     });
@@ -64,7 +64,7 @@ app.post('/ajout.html', async function(req,res,next) {
     await data.insertOne({ "name" : req.session.username,"date": req.body.date,"adresse": req.body.adresse,"description": req.body.description});
     const info = await data.find({}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
     const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
-    res.render('page_principale.ejs',{username: req.session.username,name1: info,info_perso:info_perso});
+    res.render('page_principale.ejs',{username: req.session.username,name1: info,info_perso:info_perso,recherche:"",action: false});
     } else {
         res.render('page_creation.ejs', {username: req.session.username, erreur: "Veuillez remplir tous les champs" } );
     }
@@ -76,16 +76,10 @@ app.get('/deconnection.html', function(req, res, next) {
 app.get('/retour', async function(req,res,next) {
     const info = await data.find({}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
     if (req.session.username) {
-        const info_perso = await data.find({name: req.session.username}, {
-            name: 1,
-            date: 1,
-            adresse: 1,
-            description: 1,
-            _id: 0
-        }).toArray();
-        res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso});
+        const info_perso = await data.find({name: req.session.username}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
+        res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso,recherche:"",action: false});
     } else {
-        res.render('page_principale.ejs', {username: "", name1: info});
+        res.render('page_principale.ejs', {username: "", name1: info,recherche:"",action: false});
     }
 });
 
@@ -96,13 +90,23 @@ app.post("/edit", async function(req,res,next) {
     await data.updateOne({_id:new ObjectId(req.body.id) }, {$set: {username: req.session.username,date: req.body.date,adresse: req.body.adresse,description: req.body.description}});
     const info = await data.find({}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
     const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
-    res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso});
+    res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso,recherche:"",action: false});
     });
 app.post("/delete",async function(req,res,next) {
     await data.deleteOne({_id:new ObjectId(req.body.id) })
     const info = await data.find({}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
     const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
-    res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso});
+    res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso,recherche:"",action: false});
     });
+app.get("/recherche", async function(req,res,next){
+    const info = await data.find({}, {name: 1, date: 1, adresse: 1, description: 1, _id: 0}).toArray();
+    const recherche = await data.find({description:{$regex: req.query.recherche, $options: 'i'}}).toArray();
+    if (req.session.username) {
+    const info_perso = await data.find({name: req.session.username}, { name:1,date:1, adresse: 1, description: 1, _id: 0 }).toArray();
+    res.render('page_principale.ejs', {username: req.session.username, name1: info, info_perso: info_perso, recherche:recherche,action: true});
+    }else {
+    res.render('page_principale.ejs', {username: "" ,name1: info,info_perso:"",recherche:recherche,action: true});
+    }
+});
 app.use(express.static('static'));
 app.listen(8080);
