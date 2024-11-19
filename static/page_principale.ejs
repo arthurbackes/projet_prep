@@ -7,17 +7,23 @@
     <link rel="stylesheet" href="style_principale.css">
 </head>
 <body>
+    <!-- Barre de navigation commune à toute les pages -->
     <nav>
+        <!-- Titre du projet -->
         <div class="Titre">
             <h1>Projet prepratoire</h1>
         </div>
         
-
+        <!-- Barre de recherche qui utilise la route "/recherche"  -->
         <div class="gauche">
             <div class="champs-recherche">
-                <input type="text" placeholder="Champs de recherche">
-            </div>
+                <form action="/recherche" method="get">
+                <input type="text" name="recherche" placeholder="Champs de recherche">
+                </form>
 
+            </div>
+        <!-- Si l'utilisateur est connecté, ce code affiche son username.
+             Si l'utilisateur n'est pas connecté, ce code affiche un lien pour s'inscrire ou se connecter  -->
             <div class="Nom">
                 <span>
                     <% if (username) { %>
@@ -30,7 +36,8 @@
         </div>
     </nav>
 
-    <section class="lien-jour">
+    <section class="lien-">
+        <!-- Si l'utilisation est connecté, ce code lui permet d'ajouter un incident ou de se déconnecter  -->
         <div class="lien-ajout">
             <% if (username) { %>
                 <a href="/page_creation.html" id="lien-ajout">Lien pour ajouter</a>
@@ -42,13 +49,11 @@
             <% } %>
         </div>
 
-        <div class="jour">
-            <h4>Date : 29/09/2024</h4>
-        </div>
     </section>
     <section class="table">
 
         <table>
+            <!-- Affichage d'un tableau contenant tous les accidents rapportés  -->
             <tbody>
                 <tr>
                     <td>Nom</td>
@@ -59,20 +64,19 @@
 
 
                 </tr>
-                <% name1.forEach(function(item) { %>
-                    <tr>
-                        <td><%= item.name %></td>
-                        <td><%= item.date %></td>
-                        <td><%= item.adresse %></td>
-                        <td><%= item.description %></td>
-
-
-                    </tr>
-                <% }); %>
+                <% for (let item of name1) { %>
+                <tr>
+                    <td><%= item.name %></td>
+                    <td><%= item.date %></td>
+                    <td><%= item.adresse %></td>
+                    <td><%= item.description %></td>
+                </tr>
+                <% } %>
 
             </tbody>
         </table>
-
+<!-- Si l'utilisateur est connecté , ce code affiche d'un tableau contenant tous les accidents personnels rapportés par lui même 
+ ainsi que la possibilité de les modifier ou les supprimer-->
         <% if (username) { %>
         <% if (info_perso && info_perso.length > 0) { %>
         <p>Vos incidents:</p>
@@ -87,7 +91,7 @@
                 </tr>
             </thead>
             <tbody>
-                <% info_perso.forEach(function(item) { %>
+                <% for (let item of info_perso) { %>
                     <tr>
                         <form action="/modification.ejs" method="post">
                             <input type="hidden" name="id" value="<%= item._id %>">
@@ -105,17 +109,48 @@
                         </form>
                         <form action="/delete" method="post">
                             <input type="hidden" name="id" value="<%= item._id %>">
-                            <td> <input type="submit" value="Suppri mer"></td>
+                            <td> <input type="submit" value="Supprimer"></td>
                         </form>
                     </tr>
-                <% }) %>
+                <% } %>
             </tbody>
         </table>
         <% } else { %>
             <p>Vous n'avez signalé aucun incident</p>
-        <% } %>
-        <% } %>
+        <% } }%>
+    <!-- Si l'utilisateur fait une recherche, tous les inccidents contenant l'objet de la recherche seront affichés dans un tableau-->
+        <% if (action) { %>
+        <% if (recherche && recherche.length>0) { %>
+        <p>Votre recherche:</p>
+        <table>
+            <thead>
+                <tr>
+                    <td>Nom</td>
+                    <td>Date</td>
+                    <td>Adresse</td>
+                    <td>Description</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (let item of recherche) { %>
+                    <tr>
+                            <td><%= item.name %></td>
+                            <td><%= item.date %></td>
+                            <td><%= item.adresse %></td>
+                            <td><%= item.description %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+        <%}else {%>
+        <p>Aucune donnée trouvée.</p>
+        <%}
+        %>
+        <%}%>
     </section>
-    
+
+
+
+
 </body>
 </html>
