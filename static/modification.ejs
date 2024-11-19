@@ -7,25 +7,25 @@
     <link rel="stylesheet" href="style_principale.css">
 </head>
 <body>
+    <!-- Barre de navigation commune à toute les pages -->
     <nav>
+        <!-- Titre du projet -->
         <div class="Titre">
             <h1>Projet prepratoire</h1>
         </div>
+        <!-- Lien vers la page principale -->
         <div class="lien-Accueil">
             <a href='/retour' id="lien-Accueil">Accueil</a>
         </div>
-
+        <!-- Nom de l'utilisateur -->
         <div class="gauche">
-            <div class="champs-recherche">
-                <input type="text" placeholder="Champs de recherche">
-            </div>
-
             <div class="Nom">
                 <span><%= username%></span>
             </div>
         </div>
     </nav>
     <p>
+    <!-- Formulaire pour modifier un incident sélectionné en utilisant la route edit  -->
     Modifiez un incident :
         <form action="/edit" method="post">
             <p>

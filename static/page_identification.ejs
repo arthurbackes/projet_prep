@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site de Ottignies</title>
+    <link rel="stylesheet" href="style_principale.css">
+</head>
+<body>
+    <!-- Barre de navigation commune à toute les pages -->
+    <nav>
+        <!-- Titre du projet -->
+        <div class="Titre">
+            <h1>Projet prepratoire</h1>
+        </div>
+        <!-- Lien vers la page principale -->
+        <div class="lien-Accueil">
+            <a href='/retour' id="lien-Accueil">Accueil</a>
+        </div>
+    </nav>
+<!--Formulaire pour ce connecter à un compte existant ou en créer un  -->
+    <p>
+        
+        Compte Existant:
+            <form action="identification.html" method="get">
+            NomNom:<br>
+            <input type="text" name="username"><br>
+            Mot de passe:<br>
+            <input type="text" name="password">
+            <input type="submit" value="Log in">
+            </form>
+    </p>
+     <p>
+        Inscription:
+            <form action="inscription.html" method="post">
+            Nom:<br>
+            <input type="text" name="username"><br>
+            Mot de passe:<br>
+            <input type="text" name="password">
+            <input type="submit" value="Log in">
+            </form>
+    </p>
+    <!--Affichage d'un message d'erreur si l'identifiant et/ou le mot de passe sont inorrectes lors de la connexion 
+    ou si un des champs n'est pas rempli lors de l'inscription.   -->
+    <p><%= erreur%></p>
+</body>

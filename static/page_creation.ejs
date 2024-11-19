@@ -7,25 +7,26 @@
     <link rel="stylesheet" href="style_principale.css">
 </head>
 <body>
+    <!-- Barre de navigation commune à toute les pages -->
     <nav>
+        <!-- Titre du projet -->
         <div class="Titre">
             <h1>Projet prepratoire</h1>
         </div>
+        <!-- Lien vers la page principale -->
         <div class="lien-Accueil">
             <a href='/retour' id="lien-Accueil">Accueil</a>
         </div>
 
         <div class="gauche">
-            <div class="champs-recherche">
-                <input type="text" placeholder="Champs de recherche">
-            </div>
+        <!-- Nom de l'utilisateur -->
 
             <div class="Nom">
                 <span><%= username%></span>
             </div>
         </div>
     </nav>
-
+    <!-- Formulaire pour créer un incident en utilisant la route ajout.html  -->
     <p>
     Ajoutez un incident :
         <form action="ajout.html" method="post">
@@ -42,6 +43,7 @@
             <input type="submit" value="Submit incident">
           </form>
     </p>
+    <!-- Affiche une erreur si un des input n'est pas complété-->
     <p><%= erreur%></p>
 
 
